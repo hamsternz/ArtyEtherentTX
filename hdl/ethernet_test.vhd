@@ -111,6 +111,7 @@ architecture Behavioral of ethernet_test is
     signal clk50MHz : std_logic;
     signal clk25MHz : std_logic;
     signal clkfb    : std_logic;
+    signal CLK100MHz_buffered : std_logic;
 begin
    ---------------------------------------------------
    -- Strapping signals
@@ -249,7 +250,8 @@ clock_fwd_ddr : ODDR
    -------------------------------------------------------
    -- Generate a 25MHz and 50Mhz clocks from the 100MHz 
    -- system clock 
-   ------------------------------------------------------- 
+   -------------------------------------------------------
+i_bufg: bufg port map (i => CLK100MHz, o => CLK100MHz_buffered);
 clocking : PLLE2_BASE
    generic map (
       BANDWIDTH          => "OPTIMIZED",
@@ -274,7 +276,7 @@ clocking : PLLE2_BASE
       STARTUP_WAIT       => "FALSE"
    )
    port map (
-      CLKIN1   => CLK100MHz,
+      CLKIN1   => CLK100MHz_buffered,
       CLKOUT0 => CLK25MHz, CLKOUT1 => CLK50Mhz, 
       CLKOUT2 => open,     CLKOUT3  => open,
       CLKOUT4 => open,     CLKOUT5 => open,
